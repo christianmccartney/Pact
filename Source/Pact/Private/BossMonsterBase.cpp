@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BossMonsterBase.h"
+#include <iostream>
 
 // Sets default values
 ABossMonsterBase::ABossMonsterBase()
@@ -14,7 +15,7 @@ ABossMonsterBase::ABossMonsterBase()
 void ABossMonsterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	std::cout << "Hello\n";
 }
 
 // Called every frame
@@ -24,3 +25,6 @@ void ABossMonsterBase::Tick(float DeltaTime)
 
 }
 
+bool ABossMonsterBase::isAttacking() { return attacking; }
+
+float ABossMonsterBase::getPlayerDamage() { return 0; }

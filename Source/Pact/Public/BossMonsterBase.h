@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BossMonsterBase.generated.h"
 
-UCLASS(Blueprintable)
+UCLASS(meta = (Blueprintable))
 class PACT_API ABossMonsterBase : public AActor
 {
 	GENERATED_BODY()
@@ -16,11 +16,20 @@ public:
 	ABossMonsterBase();
 
 protected:
+	bool attacking;
+	float health;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Boss")
+	virtual bool isAttacking();
+
+	UFUNCTION(BlueprintCallable, Category = "Boss")
+	virtual float getPlayerDamage();
 
 };
