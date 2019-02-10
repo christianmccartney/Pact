@@ -17,9 +17,16 @@ public:
 
 protected:
 	TSubclassOf<class UUserWidget> HealthBarClass;
+	TSubclassOf<class AActor> PlayerClass;
+
+	UPROPERTY(BlueprintReadWrite)
+	float maxTurnAngle = 3;
 
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* myHealthBar;
+
+	UPROPERTY(BlueprintReadWrite)
+	AActor* player;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool attacking;
@@ -42,12 +49,18 @@ public:
 	virtual void handleDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	// Called by handleDamage when health reaches 0 (override in children)
-	UFUNCTION(BlueprintCallable, Category = "Boss")
+	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual void handleDefeat();
 
 	// Calculate damage to player on hit (override in children)
-	UFUNCTION(BlueprintCallable, Category = "Boss")
+	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual float getPlayerDamage();
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	virtual void lookAtPlayer();
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	virtual FVector getPlayerLocation();
 
 	// Getters and setters
 	UFUNCTION(BlueprintCallable, Category = "Boss")

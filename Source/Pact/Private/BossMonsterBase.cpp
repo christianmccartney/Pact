@@ -4,6 +4,8 @@
 #include "Components/WidgetComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values
@@ -14,11 +16,10 @@ ABossMonsterBase::ABossMonsterBase()
 	OnTakeAnyDamage.AddDynamic(this, &ABossMonsterBase::handleDamage);
 	// Find the BossHealthBar class
 	ConstructorHelpers::FClassFinder<UUserWidget> HealthBarClassFinder(TEXT("/Game/GameObjects/Widgets/BossHealthBar"));
-	if (!HealthBarClassFinder.Succeeded()) {
-		UE_LOG(LogTemp, Error, TEXT("Could not find BossHealthBar widget class"));
-		return;
-	}
 	HealthBarClass = HealthBarClassFinder.Class;
+	// Find the ThirdPersonPlayer class
+	ConstructorHelpers::FClassFinder<AActor> PlayerClassFinder(TEXT("/Game/GameObjects/Actors/ThirdPersonCharacter"));
+	PlayerClass = PlayerClassFinder.Class;
 }
 
 // Called when the game starts or when spawned
@@ -41,6 +42,15 @@ void ABossMonsterBase::BeginPlay()
 		if (bossProperty) {
 			bossProperty->SetPropertyValue_InContainer(myHealthBar, this);
 		}
+	}
+
+	// Find a reference to the player object
+	TArray<AActor*> playerActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PlayerClass, playerActors);
+	if (playerActors.Num() > 0) {
+		player = playerActors.Last();
+	} else {
+		UE_LOG(LogTemp, Error, TEXT("Could not find player object"))
 	}
 }
 
@@ -69,4 +79,26 @@ void ABossMonsterBase::handleDamage(AActor* damagedActor, float Damage, const cl
 			handleDefeat();
 		}
 	}
+}
+
+void ABossMonsterBase::lookAtPlayer() {
+	FVector myLocation = GetActorLocation();
+	FVector playerLocation = getPlayerLocation();
+	FRotator currentRotation = GetActorRotation().GetNormalized();
+	FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(myLocation, playerLocation).GetNormalized();
+	lookRotation.Pitch = 0;
+	lookRotation.Roll = 0;
+	float turnAngle = UKismetMathLibrary::Abs(currentRotation.Yaw - lookRotation.Yaw);
+	if ((currentRotation.Yaw > 0) != (lookRotation.Yaw > 0)) {
+		turnAngle = UKismetMathLibrary::Abs(turnAngle - 360);
+	}
+	if (turnAngle > maxTurnAngle) {
+		int sign = (currentRotation.Yaw - lookRotation.Yaw) > 0 ? -1 : 1;
+		lookRotation.Yaw = currentRotation.Yaw + (sign * maxTurnAngle);
+	}
+	SetActorRotation(lookRotation);
+}
+
+FVector ABossMonsterBase::getPlayerLocation() {
+	return player->GetActorLocation();
 }
