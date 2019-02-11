@@ -28,14 +28,13 @@ void ABossMonsterBase::BeginPlay()
 	Super::BeginPlay();
 	defeated = false;
 	attacking = false;
+	inBattle = false;
 	health = 100;
 
 	// Create health bar
 	APlayerController* controller = GetWorld()->GetFirstPlayerController();
 	myHealthBar = CreateWidget<UUserWidget>(controller, HealthBarClass);
 	if (myHealthBar) {
-		// set visible
-		myHealthBar->AddToViewport();
 		// Set health bar's Boss property to this object
 		FName bossPropertyName(TEXT("Boss"));
 		UObjectProperty* bossProperty = FindField<UObjectProperty>(HealthBarClass, bossPropertyName);
@@ -60,6 +59,14 @@ void ABossMonsterBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ABossMonsterBase::startBattle() {
+	if (!defeated) {
+		inBattle = true;
+		// set health bar visible
+		myHealthBar->AddToViewport();
+	}
+}
+
 bool ABossMonsterBase::isAttacking() { return attacking; }
 
 bool ABossMonsterBase::isDefeated() { return defeated; }
@@ -68,7 +75,7 @@ float ABossMonsterBase::getPlayerDamage() { return 0; }
 
 void ABossMonsterBase::handleDefeat() {
 	myHealthBar->RemoveFromParent();
-};
+}
 
 void ABossMonsterBase::handleDamage(AActor* damagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser) {
 	if (!defeated) {
@@ -76,7 +83,9 @@ void ABossMonsterBase::handleDamage(AActor* damagedActor, float Damage, const cl
 		if (health <= 0) {
 			health = 0;
 			defeated = true;
+			inBattle = false;
 			handleDefeat();
+			OnDefeat();
 		}
 	}
 }

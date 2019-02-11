@@ -29,6 +29,9 @@ protected:
 	AActor* player;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool inBattle;
+
+	UPROPERTY(BlueprintReadWrite)
 	bool attacking;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -45,12 +48,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Handler for OnTakeAnyDamage event
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual void handleDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	// Called by handleDamage when health reaches 0 (override in children)
-	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual void handleDefeat();
+
+	// Event triggered when health reaches 0 (override in blueprints)
+	// Called after handleDefeat
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDefeat();
 
 	// Calculate damage to player on hit (override in children)
 	UFUNCTION(BlueprintCallable, Category = "Combat")
@@ -61,6 +68,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual FVector getPlayerLocation();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	virtual void startBattle();
 
 	// Getters and setters
 	UFUNCTION(BlueprintCallable, Category = "Boss")
