@@ -78,4 +78,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Boss")
 	virtual bool isAttacking();
+
+	// pass number of animations, return random index between 0 to number of animations minus 1
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	virtual int simpleBossAI(int AnimationCount);
+
+	// pass array counting number of times each attack has hit character, return index of attack that should be used next
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	virtual int bestAttackBossAI(int HitCount[]);
 };

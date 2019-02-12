@@ -111,3 +111,39 @@ void ABossMonsterBase::lookAtPlayer() {
 FVector ABossMonsterBase::getPlayerLocation() {
 	return player->GetActorLocation();
 }
+
+int ABossMonsterBase::simpleBossAI(int AnimationCount) {
+	return rand() % AnimationCount;
+}
+
+int ABossMonsterBase::bestAttackBossAI(int HitCount[]) {
+	int length = *(&HitCount + 1) - HitCount;
+	double* scalars = new double[length];
+	int largest = -1;
+	int i, index = 0;
+	for (; i < length; i++) {
+		if (HitCount[i] > largest) {
+			largest = HitCount[i];
+			index = i;
+		}
+	}
+
+	for (i = 0; i < length; i++) {
+		if (i == index) {
+			scalars[i] = (1.2 + ((rand() % 100) / 100)) * HitCount[i];
+		} else {
+			scalars[i] = (1.0 + ((rand() % 100) / 100)) * HitCount[i];
+		}
+	}
+
+	largest = -1;
+	for (i = 0; i < length; i++) {
+		if (scalars[i] > largest) {
+			largest = scalars[i];
+			index = i;
+		}
+	}
+
+	delete[] scalars;
+	return index;
+}
