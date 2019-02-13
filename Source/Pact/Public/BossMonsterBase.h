@@ -57,13 +57,19 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Handler for OnTakeAnyDamage event
+	// Subtracts damage from health and calls handleDefeat when health hits 0
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual void handleDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	// Event triggered in handleDamage (for implementation in blueprints)
+	// override in children for extra damage effects, sounds, animations etc.
+	UFUNCTION(BlueprintImplementableEvent)
+	void AfterDamage();
 
 	// Called by handleDamage when health reaches 0 (override in children)
 	virtual void handleDefeat();
 
-	// Event triggered when health reaches 0 (override in blueprints)
+	// Event triggered when health reaches 0 (implement in blueprints)
 	// Called after handleDefeat
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDefeat();
