@@ -71,7 +71,7 @@ bool ABossMonsterBase::isAttacking() { return attacking; }
 
 bool ABossMonsterBase::isDefeated() { return defeated; }
 
-float ABossMonsterBase::getPlayerDamage() { return 0; }
+float ABossMonsterBase::getPlayerDamage() { return attackStrengths[currentAttack]; }
 
 void ABossMonsterBase::handleDefeat() {
 	myHealthBar->RemoveFromParent();
@@ -116,19 +116,19 @@ int ABossMonsterBase::simpleBossAI(int AnimationCount) {
 	return rand() % AnimationCount;
 }
 
-int ABossMonsterBase::bestAttackBossAI(int HitCount[]) {
-	int length = *(&HitCount + 1) - HitCount;
+int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
+	int length = HitCount.Num();
 	double* scalars = new double[length];
 	int largest = -1;
-	int i, index = 0;
-	for (; i < length; i++) {
+	int index = 0;
+	for (int i = 0; i < length; i++) {
 		if (HitCount[i] > largest) {
 			largest = HitCount[i];
 			index = i;
 		}
 	}
 
-	for (i = 0; i < length; i++) {
+	for (int i = 0; i < length; i++) {
 		if (i == index) {
 			scalars[i] = (1.2 + ((rand() % 100) / 100)) * HitCount[i];
 		} else {
@@ -137,7 +137,7 @@ int ABossMonsterBase::bestAttackBossAI(int HitCount[]) {
 	}
 
 	largest = -1;
-	for (i = 0; i < length; i++) {
+	for (int i = 0; i < length; i++) {
 		if (scalars[i] > largest) {
 			largest = scalars[i];
 			index = i;

@@ -40,6 +40,12 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	float health;
 
+	UPROPERTY(BlueprintReadWrite)
+	int currentAttack;
+
+	UPROPERTY(BlueprintReadWrite)
+	TArray<float> attackStrengths;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -85,5 +91,5 @@ public:
 
 	// pass array counting number of times each attack has hit character, return index of attack that should be used next
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual int bestAttackBossAI(int HitCount[]);
+	virtual int bestAttackBossAI(TArray<int> HitCount);
 };
