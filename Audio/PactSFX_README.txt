@@ -7,5 +7,9 @@ PlayerHit - Player taking damage
 StudyFail - Sound for not finding a weak point
 StudySucceed - Sound for finding the weak point
 SwordSwing - Weapon swing
+TPFull - Full teleport effect
+TPForward - Half of the sound effect played forwards
+TPReverse - Half of the sound effect played in reverse
+TPFaster - Full teleport effect, but at twice the speed
 
 These are not final and will probably change in future sprints 
