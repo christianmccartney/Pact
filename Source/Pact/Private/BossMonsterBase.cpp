@@ -128,6 +128,10 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 		}
 	}
 
+	if (largest == 0) {
+		index = -1;
+	}
+
 	for (int i = 0; i < length; i++) {
 		if (i == index) {
 			scalars[i] = (1.2 + ((rand() % 100) / 100)) * HitCount[i];
@@ -144,6 +148,15 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 		}
 	}
 
+	if (largest == 1) {
+		index = rand() % length;
+	}
+
 	delete[] scalars;
 	return index;
+}
+
+void ABossMonsterBase::registerAttackHitPlayer() {
+	// Later use damage amounts instead of counts
+	attackHits[currentAttack]++;
 }
