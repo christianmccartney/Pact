@@ -6,7 +6,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-
+#include <random>
+#include <map>
 
 // Sets default values
 ABossMonsterBase::ABossMonsterBase()
@@ -119,9 +120,24 @@ int ABossMonsterBase::simpleBossAI(int AnimationCount) {
 
 int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 	int length = HitCount.Num();
-	double* scalars = new double[length];
-	int largest = -1;
-	int index = 0;
+	//double* scalars = new double[length];
+	//int largest = -1;
+	int i = 0;
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	std::vector<int> weights;
+
+	for (; i < length; i++) {
+		weights.push_back(HitCount[i]);
+	}
+
+	std::discrete_distribution<> d(weights.begin(), weights.end());
+
+	return d(gen);
+
+	/*
 	for (int i = 0; i < length; i++) {
 		if (HitCount[i] > largest) {
 			largest = HitCount[i];
@@ -153,8 +169,10 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 		index = rand() % length;
 	}
 
-	delete[] scalars;
-	return index;
+	*/
+
+	//delete[] scalars;
+	//return largest;
 }
 
 void ABossMonsterBase::registerAttackHitPlayer() {
