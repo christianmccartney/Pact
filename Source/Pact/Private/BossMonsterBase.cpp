@@ -6,6 +6,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "PactGameInstanceBase.h"
 #include <random>
 #include <map>
 
@@ -52,6 +53,14 @@ void ABossMonsterBase::BeginPlay()
 	} else {
 		UE_LOG(LogTemp, Error, TEXT("Could not find player object"))
 	}
+
+	// Get defeated state from GameInstance
+	UPactGameInstanceBase* gameInstance = Cast<UPactGameInstanceBase>(GetWorld()->GetGameInstance());
+	if (gameInstance) {
+		defeated = gameInstance->getBossDefeated(this);
+	} else {
+		UE_LOG(LogTemp, Error, TEXT("Failed to cast GameInstance to PactGameInstanceBase"));
+	}
 }
 
 // Called every frame
@@ -76,6 +85,14 @@ float ABossMonsterBase::getPlayerDamage() { return attackStrengths[currentAttack
 
 void ABossMonsterBase::handleDefeat() {
 	myHealthBar->RemoveFromParent();
+	// set defeated state in game instance
+	UPactGameInstanceBase* gameInstance = Cast<UPactGameInstanceBase>(GetWorld()->GetGameInstance());
+	if (gameInstance) {
+		gameInstance->setBossDefeated(this, true);
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("Failed to cast GameInstance to PactGameInstanceBase"));
+	}
 }
 
 void ABossMonsterBase::handleDamage(AActor* damagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser) {
