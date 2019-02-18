@@ -16,9 +16,6 @@ ABossMonsterBase::ABossMonsterBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	OnTakeAnyDamage.AddDynamic(this, &ABossMonsterBase::handleDamage);
-	// Find the BossHealthBar class
-	ConstructorHelpers::FClassFinder<UUserWidget> HealthBarClassFinder(TEXT("/Game/GameObjects/Widgets/BossHealthBar"));
-	HealthBarClass = HealthBarClassFinder.Class;
 	// Find the ThirdPersonPlayer class
 	ConstructorHelpers::FClassFinder<AActor> PlayerClassFinder(TEXT("/Game/GameObjects/Actors/ThirdPersonCharacter"));
 	PlayerClass = PlayerClassFinder.Class;
@@ -32,18 +29,6 @@ void ABossMonsterBase::BeginPlay()
 	attacking = false;
 	inBattle = false;
 	health = 100;
-
-	// Create health bar
-	APlayerController* controller = GetWorld()->GetFirstPlayerController();
-	myHealthBar = CreateWidget<UUserWidget>(controller, HealthBarClass);
-	if (myHealthBar) {
-		// Set health bar's Boss property to this object
-		FName bossPropertyName(TEXT("Boss"));
-		UObjectProperty* bossProperty = FindField<UObjectProperty>(HealthBarClass, bossPropertyName);
-		if (bossProperty) {
-			bossProperty->SetPropertyValue_InContainer(myHealthBar, this);
-		}
-	}
 
 	// Find a reference to the player object
 	TArray<AActor*> playerActors;
@@ -72,8 +57,6 @@ void ABossMonsterBase::Tick(float DeltaTime)
 void ABossMonsterBase::startBattle() {
 	if (!defeated) {
 		inBattle = true;
-		// set health bar visible
-		myHealthBar->AddToViewport();
 	}
 }
 
@@ -84,7 +67,6 @@ bool ABossMonsterBase::isDefeated() { return defeated; }
 float ABossMonsterBase::getPlayerDamage() { return attackStrengths[currentAttack]; }
 
 void ABossMonsterBase::handleDefeat() {
-	myHealthBar->RemoveFromParent();
 	// set defeated state in game instance
 	UPactGameInstanceBase* gameInstance = Cast<UPactGameInstanceBase>(GetWorld()->GetGameInstance());
 	if (gameInstance) {

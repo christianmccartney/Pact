@@ -16,14 +16,10 @@ public:
 	ABossMonsterBase();
 
 protected:
-	TSubclassOf<class UUserWidget> HealthBarClass;
 	TSubclassOf<class AActor> PlayerClass;
 
 	UPROPERTY(BlueprintReadWrite)
 	float maxTurnAngle = 3;
-
-	UPROPERTY(BlueprintReadWrite)
-	UUserWidget* myHealthBar;
 
 	UPROPERTY(BlueprintReadWrite)
 	AActor* player;
