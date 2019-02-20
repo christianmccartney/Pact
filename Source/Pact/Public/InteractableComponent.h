@@ -23,6 +23,12 @@ protected:
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FInteractSignature OnInteractedWith;
 
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FInteractSignature OnShowInteractable;
+
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FInteractSignature OnHideInteractable;
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
@@ -32,4 +38,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	virtual void interactWith();
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	virtual void showInteractable();
+	
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	virtual void hideInteractable();
 };
