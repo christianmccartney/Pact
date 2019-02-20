@@ -35,3 +35,9 @@ void UInteractableComponent::interactWith() {
 	OnInteractedWith.Broadcast();
 }
 
+void UInteractableComponent::showInteractable() {
+	OnShowInteractable.Broadcast();
+}
+void UInteractableComponent::hideInteractable() {
+	OnHideInteractable.Broadcast();
+}
