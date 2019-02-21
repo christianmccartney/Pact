@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "UserWidgetWithParent.h"
 #include "Delegates/Delegate.h"
 #include "InteractableComponent.generated.h"
 
@@ -19,7 +20,18 @@ public:
 	// Sets default values for this component's properties
 	UInteractableComponent();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString actionName = "interact";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool showInteractPrompt = true;
+
 protected:
+	TSubclassOf<class UUserWidgetWithParent> InteractPromptClass;
+
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidgetWithParent* interactPrompt = nullptr;
+
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FInteractSignature OnInteractedWith;
 
