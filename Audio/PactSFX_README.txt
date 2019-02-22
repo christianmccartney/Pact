@@ -11,5 +11,6 @@ TPFull - Full teleport effect
 TPForward - Half of the sound effect played forwards
 TPReverse - Half of the sound effect played in reverse
 TPFaster - Full teleport effect, but at twice the speed
+TPFaster2x - Full teleport effect, but twice as fast, but twice as fast
 
 These are not final and will probably change in future sprints 
