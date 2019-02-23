@@ -127,6 +127,7 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 	//double* scalars = new double[length];
 	//int largest = -1;
 	int i = 0;
+	int smoothing = 3;
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -134,7 +135,7 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 	std::vector<int> weights;
 
 	for (; i < length; i++) {
-		weights.push_back(HitCount[i]);
+		weights.push_back(HitCount[i] + smoothing);
 	}
 
 	std::discrete_distribution<> d(weights.begin(), weights.end());
