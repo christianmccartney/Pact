@@ -6,6 +6,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include <EngineGlobals.h>
+#include <Runtime/Engine/Classes/Engine/Engine.h>
 #include "PactGameInstanceBase.h"
 #include <random>
 #include <map>
@@ -98,12 +100,15 @@ void ABossMonsterBase::lookAtPlayer() {
 	FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(myLocation, playerLocation).GetNormalized();
 	lookRotation.Pitch = 0;
 	lookRotation.Roll = 0;
-	float turnAngle = UKismetMathLibrary::Abs(currentRotation.Yaw - lookRotation.Yaw);
-	if ((currentRotation.Yaw > 0) != (lookRotation.Yaw > 0)) {
-		turnAngle = UKismetMathLibrary::Abs(turnAngle - 360);
+	float turnAngle = currentRotation.Yaw - lookRotation.Yaw;
+	if (turnAngle > 180 ) {
+		turnAngle -= 360;
 	}
-	if (turnAngle > maxTurnAngle) {
-		int sign = (currentRotation.Yaw - lookRotation.Yaw) > 0 ? -1 : 1;
+	else if (turnAngle < -180) {
+		turnAngle += 360;
+	}
+	if (UKismetMathLibrary::Abs(turnAngle) > maxTurnAngle) {
+		int sign = turnAngle > 0 ? -1 : 1;
 		lookRotation.Yaw = currentRotation.Yaw + (sign * maxTurnAngle);
 	}
 	SetActorRotation(lookRotation);

@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "BossMonsterBase.generated.h"
 
 UCLASS(meta = (Blueprintable))
-class PACT_API ABossMonsterBase : public AActor
+class PACT_API ABossMonsterBase : public APawn
 {
 	GENERATED_BODY()
 	
