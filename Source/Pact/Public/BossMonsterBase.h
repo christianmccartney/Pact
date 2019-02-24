@@ -75,7 +75,7 @@ public:
 	virtual float getPlayerDamage();
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
-	virtual void lookAtPlayer();
+	virtual void lookAtPlayer(float rotationOffset = 0);
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual FVector getPlayerLocation();
