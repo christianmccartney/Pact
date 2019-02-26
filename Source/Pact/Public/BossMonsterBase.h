@@ -78,6 +78,9 @@ public:
 	virtual void lookAtPlayer(float rotationOffset = 0);
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
+	virtual bool playerIsBehind(float rotationOffset = 0);
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual FVector getPlayerLocation();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")

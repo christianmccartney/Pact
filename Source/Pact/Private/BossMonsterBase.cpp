@@ -115,6 +115,21 @@ void ABossMonsterBase::lookAtPlayer(float rotationOffset) {
 	SetActorRotation(lookRotation);
 }
 
+bool ABossMonsterBase::playerIsBehind(float rotationOffset) {
+	FVector myLocation = GetActorLocation();
+	FVector playerLocation = getPlayerLocation();
+	FRotator currentRotation = GetActorRotation().GetNormalized();
+	FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(myLocation, playerLocation).GetNormalized();
+	float zdiff = lookRotation.Yaw - (currentRotation.Yaw + rotationOffset);
+	while (zdiff < -180) {
+		zdiff += 360;
+	}
+	while (zdiff > 180) {
+		zdiff -= 360;
+	}
+	return UKismetMathLibrary::Abs(zdiff) >= 90;
+}
+
 FVector ABossMonsterBase::getPlayerLocation() {
 	return player->GetActorLocation();
 }
