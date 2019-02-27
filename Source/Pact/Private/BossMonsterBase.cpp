@@ -66,7 +66,9 @@ bool ABossMonsterBase::isAttacking() { return attacking; }
 
 bool ABossMonsterBase::isDefeated() { return defeated; }
 
-float ABossMonsterBase::getPlayerDamage() { return attackStrengths[currentAttack]; }
+float ABossMonsterBase::getPlayerDamage() {
+	return defeated ? 0 : attackStrengths[currentAttack];
+}
 
 void ABossMonsterBase::handleDefeat() {
 	// set defeated state in game instance
