@@ -18,7 +18,7 @@ public:
 protected:
 	TSubclassOf<class AActor> PlayerClass;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float maxTurnAngle = 3;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -36,16 +36,24 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	float health;
 
+	// Used to update attackHits in registerAttackHit
+	// Also convenient for attack logic in subclasses
 	UPROPERTY(BlueprintReadWrite)
 	int currentAttack;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bodyDamagesPlayer;
+	// If false, simply walking into the boss
+	// does no damage
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bodyDamagesPlayer = false;
 
+	// Damage that would be done to the player if they
+	// walked into the boss at this moment (should be
+	// set to a different value during each attack)
 	UPROPERTY(BlueprintReadWrite)
-	TArray<float> attackStrengths;
+	float currentAttackDamage = 0;
 
-	UPROPERTY(BlueprintReadWrite)
+	// updated by registerAttackHit (for AI)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<int> attackHits;
 
 	// Called when the game starts or when spawned
