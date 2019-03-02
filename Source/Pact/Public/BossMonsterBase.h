@@ -40,6 +40,9 @@ protected:
 	int currentAttack;
 
 	UPROPERTY(BlueprintReadWrite)
+	bool bodyDamagesPlayer;
+
+	UPROPERTY(BlueprintReadWrite)
 	TArray<float> attackStrengths;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -70,7 +73,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDefeat();
 
-	// Calculate damage to player on hit (override in children)
+	// Calculate damage to player on hit (overlap)
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual float getPlayerDamage();
 
