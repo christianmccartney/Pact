@@ -25,13 +25,16 @@ protected:
 	AActor* player;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool inBattle;
+	bool inBattle = false;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool attacking;
+	bool attacking = false;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool defeated;
+	bool defeated = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool soulConsumed = false;
 
 	UPROPERTY(BlueprintReadWrite)
 	float health;
@@ -80,6 +83,11 @@ public:
 	// Called after handleDefeat
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDefeat();
+
+	// Event called if the boss is dead when it spawns
+	// (defeated == true in the GameInstance)
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpawnedDead();
 
 	// Calculate damage to player on hit (overlap)
 	UFUNCTION(BlueprintCallable, Category = "Combat")

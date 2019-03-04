@@ -22,5 +22,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void setBossDefeated(ABossMonsterBase* boss, bool defeated);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	bool getBossSoulConsumed(ABossMonsterBase* boss);
 	
+	UFUNCTION(BlueprintImplementableEvent)
+	void setBossSoulConsumed(ABossMonsterBase* boss, bool soulConsumed);
 };
