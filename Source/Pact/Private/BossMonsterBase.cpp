@@ -45,6 +45,10 @@ void ABossMonsterBase::BeginPlay()
 	UPactGameInstanceBase* gameInstance = Cast<UPactGameInstanceBase>(GetWorld()->GetGameInstance());
 	if (gameInstance) {
 		defeated = gameInstance->getBossDefeated(this);
+		soulConsumed = gameInstance->getBossSoulConsumed(this);
+		if (defeated) {
+			OnSpawnedDead();
+		}
 	} else {
 		UE_LOG(LogTemp, Error, TEXT("Failed to cast GameInstance to PactGameInstanceBase"));
 	}
