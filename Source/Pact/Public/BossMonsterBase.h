@@ -56,6 +56,7 @@ protected:
 	float currentAttackDamage = 0;
 
 	// updated by registerAttackHit (for AI)
+	// Keeps track of damage to player, not number of hits
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<int> attackHits;
 
@@ -121,6 +122,7 @@ public:
 	virtual int bestAttackBossAI(TArray<int> HitCount);
 
 	// Stores hit information for bestAttackBossAI
+	// by default (if damage < 0), use currentAttackDamage
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual void registerAttackHitPlayer();
+	virtual void registerAttackHitPlayer(float damage = -1);
 };

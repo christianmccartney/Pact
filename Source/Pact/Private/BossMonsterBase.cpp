@@ -149,7 +149,7 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 	//double* scalars = new double[length];
 	//int largest = -1;
 	int i = 0;
-	int smoothing = 3;
+	int smoothing = 50;
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -202,7 +202,9 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 	//return largest;
 }
 
-void ABossMonsterBase::registerAttackHitPlayer() {
-	// Later use damage amounts instead of counts
-	attackHits[currentAttack]++;
+void ABossMonsterBase::registerAttackHitPlayer(float damage) {
+	damage = damage < 0 ? currentAttackDamage : damage;
+	if (inBattle && currentAttack >= 0 && currentAttack < attackHits.Num()) {
+		attackHits[currentAttack] += (int32)damage;
+	}
 }
