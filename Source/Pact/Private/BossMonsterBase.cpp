@@ -86,7 +86,7 @@ void ABossMonsterBase::handleDefeat() {
 }
 
 void ABossMonsterBase::handleDamage(AActor* damagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser) {
-	if (!defeated) {
+	if (!defeated && inBattle) {
 		health -= Damage;
 		AfterDamage();
 		if (health <= 0) {
