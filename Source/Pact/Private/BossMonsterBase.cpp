@@ -208,3 +208,47 @@ void ABossMonsterBase::registerAttackHitPlayer(float damage) {
 		attackHits[currentAttack] += (int32)damage;
 	}
 }
+
+int ABossMonsterBase::bestRangeAttackBossAi(TArray<int> AttackRanges, int lastAction, int attack_probability) {
+
+	int length = AttackRanges.Num();
+	double distance = UKismetMathLibrary::VSize(UKismetMathLibrary::Subtract_VectorVector(getPlayerLocation(), GetActorLocation()));
+
+	std::mt19937 generator;
+	std::uniform_int_distribution<int> attack_distrubtion(0, attack_probability);
+	std::uniform_int_distribution<int> one_in_four(0, 4);
+	std::uniform_int_distribution<int> one_in_two(0, 1);
+	int should_attack = attack_distrubtion(generator);
+
+	if(should_attack) {
+		return length;
+	}
+	else {
+		int best_attack = 0;
+		double min_distance = MAX_dbl;
+		for (int i = 0; i < length; i++) {
+			double distance_diff = (distance - AttackRanges[i]);
+			if ((distance_diff > 0) && (distance_diff < min_distance)) {
+				int should_choose = one_in_four(generator);
+				if (should_choose) {
+					best_attack = i;
+					min_distance = distance_diff;
+				}
+			}
+		}
+		int should_move = one_in_two(generator);
+		if(!best_attack && should_move) {
+			return length;
+		} else {
+			return best_attack;
+		}
+	}
+}
+
+FVector ABossMonsterBase::chooseDestination(FVector previous_move, FVector velocity) {
+	FVector new_move = previous_move;
+	std::mt19937 generator;
+
+	return new_move;
+}
+

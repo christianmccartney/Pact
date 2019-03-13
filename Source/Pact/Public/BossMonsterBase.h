@@ -121,6 +121,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual int bestAttackBossAI(TArray<int> HitCount);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	virtual int bestRangeAttackBossAi(TArray<int> AttackRanges, int lastAction, int attack_probability);
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	virtual FVector chooseDestination(FVector previous_move, FVector velocity);
+
 	// Stores hit information for bestAttackBossAI
 	// by default (if damage < 0), use currentAttackDamage
 	UFUNCTION(BlueprintCallable, Category = "Combat")
