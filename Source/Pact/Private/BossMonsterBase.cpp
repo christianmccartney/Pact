@@ -100,15 +100,18 @@ void ABossMonsterBase::handleDamage(AActor* damagedActor, float Damage, const cl
 }
 
 void ABossMonsterBase::lookAtPlayer(float rotationOffset) {
+	lookAtLocation(getPlayerLocation(), rotationOffset);
+}
+
+void ABossMonsterBase::lookAtLocation(FVector location, float rotationOffset) {
 	FVector myLocation = GetActorLocation();
-	FVector playerLocation = getPlayerLocation();
 	FRotator currentRotation = GetActorRotation().GetNormalized();
-	FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(myLocation, playerLocation).GetNormalized();
+	FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(myLocation, location).GetNormalized();
 	lookRotation.Pitch = 0;
 	lookRotation.Roll = 0;
 	lookRotation.Yaw += rotationOffset;
 	float turnAngle = currentRotation.Yaw - lookRotation.Yaw;
-	if (turnAngle > 180 ) {
+	if (turnAngle > 180) {
 		turnAngle -= 360;
 	}
 	else if (turnAngle < -180) {
