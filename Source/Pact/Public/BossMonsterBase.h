@@ -124,8 +124,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual int bestAttackBossAI(TArray<int> HitCount);
 
+	// Takes two variables
+	//
+	// Attack Ranges : An array of ints denoting the range of attacks where the index of the range corresponds to the index of the attack
+	//
+	// Attack Probability : The probability of choosing to attack where the probability is 1 to attack_probability.
+	// I.e. attack_probability = 0 is a 100% chance to attack, attack_probability = 1 is a 50% chance to attack, attack_probability = 4 is a 20% chance to attack. 
+	//
+	// Returns the index of the move to be used or -1 if it choses not to attack.
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual int bestRangeAttackBossAi(TArray<int> AttackRanges, int lastAction, int attack_probability);
+	virtual int bestAttackFromRangesBossAi(TArray<int> attack_ranges, int attack_probability);
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual FVector chooseDestination(FVector previous_move, FVector velocity);
