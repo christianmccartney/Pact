@@ -63,6 +63,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Index used to retrieve defeated state from GameInstance
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 bossIndex = -1;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
