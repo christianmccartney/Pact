@@ -81,6 +81,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void AfterDamage();
 
+	// Event triggered in registerAttackHitPlayer
+	// Useful if this is a minion/child of the main boss,
+	// and we need to update the hit counts in the parent
+	UFUNCTION(BlueprintImplementableEvent)
+	void AfterHitPlayer(float damageAmt);
+
 	// Called by handleDamage when health reaches 0 (override in children)
 	virtual void handleDefeat();
 

@@ -206,9 +206,12 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 }
 
 void ABossMonsterBase::registerAttackHitPlayer(float damage) {
-	damage = damage < 0 ? currentAttackDamage : damage;
-	if (inBattle && currentAttack >= 0 && currentAttack < attackHits.Num()) {
-		attackHits[currentAttack] += (int32)damage;
+	if (inBattle) {
+		damage = damage < 0 ? currentAttackDamage : damage;
+		if (currentAttack >= 0 && currentAttack < attackHits.Num()) {
+			attackHits[currentAttack] += (int32)damage;
+		}
+		AfterHitPlayer(damage);
 	}
 }
 
