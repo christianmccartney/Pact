@@ -107,8 +107,8 @@ void ABossMonsterBase::lookAtLocation(FVector location, float rotationOffset) {
 	FVector myLocation = GetActorLocation();
 	FRotator currentRotation = GetActorRotation().GetNormalized();
 	FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(myLocation, location).GetNormalized();
-	lookRotation.Pitch = 0;
-	lookRotation.Roll = 0;
+	lookRotation.Pitch = currentRotation.Pitch;
+	lookRotation.Roll = currentRotation.Roll;
 	lookRotation.Yaw += rotationOffset;
 	float turnAngle = currentRotation.Yaw - lookRotation.Yaw;
 	if (turnAngle > 180) {
