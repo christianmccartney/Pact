@@ -100,15 +100,18 @@ void ABossMonsterBase::handleDamage(AActor* damagedActor, float Damage, const cl
 }
 
 void ABossMonsterBase::lookAtPlayer(float rotationOffset) {
+	lookAtLocation(getPlayerLocation(), rotationOffset);
+}
+
+void ABossMonsterBase::lookAtLocation(FVector location, float rotationOffset) {
 	FVector myLocation = GetActorLocation();
-	FVector playerLocation = getPlayerLocation();
 	FRotator currentRotation = GetActorRotation().GetNormalized();
-	FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(myLocation, playerLocation).GetNormalized();
-	lookRotation.Pitch = 0;
-	lookRotation.Roll = 0;
+	FRotator lookRotation = UKismetMathLibrary::FindLookAtRotation(myLocation, location).GetNormalized();
+	lookRotation.Pitch = currentRotation.Pitch;
+	lookRotation.Roll = currentRotation.Roll;
 	lookRotation.Yaw += rotationOffset;
 	float turnAngle = currentRotation.Yaw - lookRotation.Yaw;
-	if (turnAngle > 180 ) {
+	if (turnAngle > 180) {
 		turnAngle -= 360;
 	}
 	else if (turnAngle < -180) {
@@ -203,15 +206,18 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 }
 
 void ABossMonsterBase::registerAttackHitPlayer(float damage) {
-	damage = damage < 0 ? currentAttackDamage : damage;
-	if (inBattle && currentAttack >= 0 && currentAttack < attackHits.Num()) {
-		attackHits[currentAttack] += (int32)damage;
+	if (inBattle) {
+		damage = damage < 0 ? currentAttackDamage : damage;
+		if (currentAttack >= 0 && currentAttack < attackHits.Num()) {
+			attackHits[currentAttack] += (int32)damage;
+		}
+		AfterHitPlayer(damage);
 	}
 }
 
-int ABossMonsterBase::bestRangeAttackBossAi(TArray<int> AttackRanges, int lastAction, int attack_probability) {
+int ABossMonsterBase::bestAttackFromRangesBossAi(TArray<int> attack_ranges, int attack_probability) {
 
-	int length = AttackRanges.Num();
+	int length = attack_ranges.Num();
 	double distance = UKismetMathLibrary::VSize(UKismetMathLibrary::Subtract_VectorVector(getPlayerLocation(), GetActorLocation()));
 
 	std::mt19937 generator;
@@ -221,13 +227,13 @@ int ABossMonsterBase::bestRangeAttackBossAi(TArray<int> AttackRanges, int lastAc
 	int should_attack = attack_distrubtion(generator);
 
 	if(should_attack) {
-		return length;
+		return -1;
 	}
 	else {
 		int best_attack = 0;
 		double min_distance = MAX_dbl;
 		for (int i = 0; i < length; i++) {
-			double distance_diff = (distance - AttackRanges[i]);
+			double distance_diff = (distance - attack_ranges[i]);
 			if ((distance_diff > 0) && (distance_diff < min_distance)) {
 				int should_choose = one_in_four(generator);
 				if (should_choose) {
@@ -238,7 +244,7 @@ int ABossMonsterBase::bestRangeAttackBossAi(TArray<int> AttackRanges, int lastAc
 		}
 		int should_move = one_in_two(generator);
 		if(!best_attack && should_move) {
-			return length;
+			return -1;
 		} else {
 			return best_attack;
 		}

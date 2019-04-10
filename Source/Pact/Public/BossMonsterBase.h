@@ -63,6 +63,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Index used to retrieve defeated state from GameInstance
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 bossIndex = -1;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -76,6 +80,12 @@ public:
 	// override in children for extra damage effects, sounds, animations etc.
 	UFUNCTION(BlueprintImplementableEvent)
 	void AfterDamage();
+
+	// Event triggered in registerAttackHitPlayer
+	// Useful if this is a minion/child of the main boss,
+	// and we need to update the hit counts in the parent
+	UFUNCTION(BlueprintImplementableEvent)
+	void AfterHitPlayer(float damageAmt);
 
 	// Called by handleDamage when health reaches 0 (override in children)
 	virtual void handleDefeat();
@@ -96,6 +106,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual void lookAtPlayer(float rotationOffset = 0);
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	virtual void lookAtLocation(FVector location, float rotationOffset = 0);
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual bool playerIsBehind(float rotationOffset = 0);
@@ -121,8 +134,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual int bestAttackBossAI(TArray<int> HitCount);
 
+	// Takes two variables
+	//
+	// Attack Ranges : An array of ints denoting the range of attacks where the index of the range corresponds to the index of the attack
+	//
+	// Attack Probability : The probability of choosing to attack where the probability is 1 to attack_probability.
+	// I.e. attack_probability = 0 is a 100% chance to attack, attack_probability = 1 is a 50% chance to attack, attack_probability = 4 is a 20% chance to attack. 
+	//
+	// Returns the index of the move to be used or -1 if it choses not to attack.
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual int bestRangeAttackBossAi(TArray<int> AttackRanges, int lastAction, int attack_probability);
+	virtual int bestAttackFromRangesBossAi(TArray<int> attack_ranges, int attack_probability);
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual FVector chooseDestination(FVector previous_move, FVector velocity);
