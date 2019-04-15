@@ -143,7 +143,7 @@ public:
 	//
 	// Returns the index of the move to be used or -1 if it choses not to attack.
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual int bestAttackFromRangesBossAi(TArray<int> attack_ranges, int attack_probability);
+	virtual int bestAttackFromRangesBossAi(TArray<int> attack_ranges, int prev_attack_one, int prev_attack_two);
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	virtual FVector chooseDestination(FVector previous_move, FVector velocity);

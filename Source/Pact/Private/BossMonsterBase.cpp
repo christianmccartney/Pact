@@ -215,17 +215,48 @@ void ABossMonsterBase::registerAttackHitPlayer(float damage) {
 	}
 }
 
-int ABossMonsterBase::bestAttackFromRangesBossAi(TArray<int> attack_ranges, int attack_probability) {
+int ABossMonsterBase::bestAttackFromRangesBossAi(TArray<int> attack_ranges, int prev_attack_one, int prev_attack_two) {
 
 	int length = attack_ranges.Num();
-	double distance = UKismetMathLibrary::VSize(UKismetMathLibrary::Subtract_VectorVector(getPlayerLocation(), GetActorLocation()));
-
+	double distance = FVector::Dist(getPlayerLocation(), GetActorLocation());
 	std::mt19937 generator;
-	std::uniform_int_distribution<int> attack_distrubtion(0, attack_probability);
-	std::uniform_int_distribution<int> one_in_four(0, 4);
-	std::uniform_int_distribution<int> one_in_two(0, 1);
-	int should_attack = attack_distrubtion(generator);
+	std::vector<double> weights;
 
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	for (int i = 0; i < length; i++) {
+		double diff = (attack_ranges[i] - distance);
+		if (diff > 0) { // check that the attack is in range
+			if ((i == prev_attack_one) && (i == prev_attack_two)) { // dont want to use an attack more than twice in a row
+				weights.push_back(0);
+			} else {
+				// weight the choice such that the closer the player is to an attack boundary, the more likely that attack will be chosen
+				weights.push_back(pow((1/diff)*100, 2));
+			}
+		} else {
+			weights.push_back(0);
+		}
+	}
+
+	std::discrete_distribution<> d(weights.begin(), weights.end());
+	int ret = d(gen);
+
+	// check if ret = 0
+	if (ret==0) {
+		for (int i = 0; i < length; i++) {
+			// if any of the weights are not 0 then return ret, a move was chosen
+			if (weights[i]!=0) {
+				return ret;
+			}
+		}
+		// if all of the weights are 0 then return length, the boss should not make an attack right now
+		return length;
+	}
+
+	return ret;
+
+	/*
 	if(should_attack) {
 		return -1;
 	}
@@ -233,15 +264,15 @@ int ABossMonsterBase::bestAttackFromRangesBossAi(TArray<int> attack_ranges, int 
 		int best_attack = 0;
 		double min_distance = MAX_dbl;
 		for (int i = 0; i < length; i++) {
-			double distance_diff = (distance - attack_ranges[i]);
+			double distance_diff = (attack_ranges[i] - distance);
 			if ((distance_diff > 0) && (distance_diff < min_distance)) {
-				int should_choose = one_in_four(generator);
-				if (should_choose) {
-					best_attack = i;
-					min_distance = distance_diff;
-				}
+
+				weights.push_back();
+
+
 			}
 		}
+		std::discrete_distribution<> d(weights.begin(), weights.end());
 		int should_move = one_in_two(generator);
 		if(!best_attack && should_move) {
 			return -1;
@@ -249,6 +280,7 @@ int ABossMonsterBase::bestAttackFromRangesBossAi(TArray<int> attack_ranges, int 
 			return best_attack;
 		}
 	}
+	*/
 }
 
 FVector ABossMonsterBase::chooseDestination(FVector previous_move, FVector velocity) {
