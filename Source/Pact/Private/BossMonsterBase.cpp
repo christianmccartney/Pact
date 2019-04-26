@@ -21,7 +21,6 @@ ABossMonsterBase::ABossMonsterBase()
 	// Find the ThirdPersonPlayer class
 	ConstructorHelpers::FClassFinder<AActor> PlayerClassFinder(TEXT("/Game/GameObjects/Actors/ThirdPersonCharacter"));
 	PlayerClass = PlayerClassFinder.Class;
-	totalHealth = 100;
 }
 
 // Called when the game starts or when spawned
