@@ -21,7 +21,6 @@ ABossMonsterBase::ABossMonsterBase()
 	// Find the ThirdPersonPlayer class
 	ConstructorHelpers::FClassFinder<AActor> PlayerClassFinder(TEXT("/Game/GameObjects/Actors/ThirdPersonCharacter"));
 	PlayerClass = PlayerClassFinder.Class;
-	totalHealth = 100;
 }
 
 // Called when the game starts or when spawned
@@ -168,42 +167,6 @@ int ABossMonsterBase::bestAttackBossAI(TArray<int> HitCount) {
 
 	return d(gen);
 
-	/*
-	for (int i = 0; i < length; i++) {
-		if (HitCount[i] > largest) {
-			largest = HitCount[i];
-			index = i;
-		}
-	}
-
-	if (largest == 0) {
-		index = -1;
-	}
-
-	for (int i = 0; i < length; i++) {
-		if (i == index) {
-			scalars[i] = (1.2 + ((rand() % 100) / 100)) * HitCount[i];
-		} else {
-			scalars[i] = (1.0 + ((rand() % 100) / 100)) * HitCount[i];
-		}
-	}
-
-	largest = -1;
-	for (int i = 0; i < length; i++) {
-		if (scalars[i] > largest) {
-			largest = scalars[i];
-			index = i;
-		}
-	}
-
-	if (largest == 1) {
-		index = rand() % length;
-	}
-
-	*/
-
-	//delete[] scalars;
-	//return largest;
 }
 
 void ABossMonsterBase::registerAttackHitPlayer(float damage) {
@@ -233,7 +196,7 @@ int ABossMonsterBase::bestAttackFromRangesBossAi(TArray<int> attack_ranges, int 
 				weights.push_back(0);
 			} else {
 				// weight the choice such that the closer the player is to an attack boundary, the more likely that attack will be chosen
-				weights.push_back(pow((1/diff)*100, 2));
+				weights.push_back(((1.0 / diff) * 1000) / 2);
 			}
 		} else {
 			weights.push_back(0);

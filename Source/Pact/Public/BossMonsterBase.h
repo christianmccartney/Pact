@@ -40,7 +40,7 @@ protected:
 	float health;
 
 	UPROPERTY(BlueprintReadWrite)
-	float totalHealth;
+	float totalHealth = 100;
 
 	// Used to update attackHits in registerAttackHit
 	// Also convenient for attack logic in subclasses
